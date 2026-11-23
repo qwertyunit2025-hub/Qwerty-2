@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#090c12">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<title>Имущество</title>
+<style>
+:root{--bg:#090c12;--s1:#10151f;--s2:#171e2b;--ln:rgba(255,255,255,.075);--tx:#eef1f7;--mt:#8792a8;--ac:#a393ff;--gold:#ecd29c;--nav:rgba(18,23,34,.76);--ok:#4fd1a1;--warn:#f0b35a;--bad:#ef6b73;color-scheme:dark}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+body{padding:env(safe-area-inset-top) 0 calc(78px + env(safe-area-inset-bottom));-webkit-user-select:none;user-select:none;overscroll-behavior-y:none;touch-action:manipulation}
+input,textarea{-webkit-user-select:text;user-select:text}
+header{padding:18px 18px 6px;display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+header h1{margin:0;font-size:22px;letter-spacing:-.02em}
+header span{color:var(--mt);font-size:12px;text-align:right}
+main{max-width:640px;margin:0 auto;padding:8px 16px 72px}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+.hero{padding:22px 4px 8px}
+.hero small{color:var(--mt)}
+.hero .big{font-size:42px;font-weight:700;letter-spacing:-.035em;font-variant-numeric:tabular-nums;margin:2px 0 4px}
+.hero .meta{color:var(--mt);font-size:13px}
+.bar{display:flex;height:14px;border-radius:7px;overflow:hidden;background:var(--s2);margin:16px 0 12px;gap:2px}
+.bar i{display:block;min-width:4px}
+.leg{display:grid;grid-template-columns:1fr 1fr;gap:6px 14px;font-size:13px}
+.leg div{display:flex;align-items:center;gap:7px;color:var(--mt);cursor:pointer}
+.leg div b{color:var(--tx);margin-left:auto;font-weight:600;font-variant-numeric:tabular-nums}
+.leg u{width:9px;height:9px;border-radius:3px;flex:none}
+h2{font-size:15px;margin:26px 2px 10px;font-weight:650}
+.card{display:flex;gap:12px;align-items:center;background:var(--s1);border:1px solid var(--ln);border-radius:16px;padding:10px;margin-bottom:8px;cursor:pointer}
+.card:active{background:var(--s2)}
+.th{width:52px;height:52px;border-radius:12px;background:color-mix(in srgb,var(--c) 18%,var(--s2));display:grid;place-items:center;font-size:24px;flex:none;overflow:hidden}
+.th img{width:100%;height:100%;object-fit:cover}
+.in{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.in b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
+.in span{color:var(--mt);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.in em{font-style:normal;font-size:12px;margin-top:2px}
+.ok{color:var(--ok)}.warn{color:var(--warn)}.bad{color:var(--bad)}
+.pr{text-align:right;font-weight:650;font-variant-numeric:tabular-nums;white-space:nowrap}
+.pr small{display:block;color:var(--mt);font-weight:400;font-size:11px}
+.tools{position:sticky;top:0;background:var(--bg);padding:8px 0 6px;z-index:5}
+.tools input,.tools select,.f input,.f select,.f textarea{width:100%;background:var(--s1);border:1px solid var(--ln);border-radius:12px;padding:11px 13px;outline:none}
+.tools input:focus,.f input:focus,.f select:focus,.f textarea:focus{border-color:var(--ac)}
+.chips{display:flex;gap:7px;overflow-x:auto;padding:9px 0 3px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chips button{flex:none;background:var(--s1);border:1px solid var(--ln);border-radius:20px;padding:6px 13px;color:var(--mt)}
+.chips button.on{background:var(--ac);border-color:var(--ac);color:#12142a;font-weight:600}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.sum{color:var(--mt);font-size:13px;margin:6px 2px 10px}
+.empty{text-align:center;color:var(--mt);padding:38px 14px}
+.empty p{margin:0 0 14px}
+.btn{background:var(--ac);color:#12142a;border:0;border-radius:12px;padding:12px 18px;font-weight:650}
+.btn.g{background:var(--s2);color:var(--tx);border:1px solid var(--ln)}
+.btn.r{background:transparent;color:var(--bad);border:1px solid color-mix(in srgb,var(--bad) 50%,transparent)}
+.grp{background:var(--s1);border:1px solid var(--ln);border-radius:16px;padding:14px;margin-bottom:12px}
+.grp .btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.grp p{margin:0;color:var(--mt);font-size:13px}
+.loc{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--ln);font-size:14px}
+.loc:last-child{border:0}
+nav{position:fixed;left:0;right:0;bottom:0;background:color-mix(in srgb,var(--s1) 94%,transparent);backdrop-filter:blur(12px);border-top:1px solid var(--ln);display:flex;justify-content:space-around;padding:6px 8px calc(6px + env(safe-area-inset-bottom));z-index:10}
+nav button{background:none;border:0;color:var(--mt);display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;padding:6px 18px;border-radius:12px}
+nav button span{font-size:20px;filter:grayscale(1);opacity:.7}
+nav button.on{color:var(--ac)}
+nav button.on span{filter:none;opacity:1}
+#fab{position:fixed;right:18px;bottom:calc(84px + env(safe-area-inset-bottom));width:56px;height:56px;border-radius:18px;border:0;background:var(--ac);color:#12142a;font-size:30px;font-weight:300;box-shadow:0 8px 24px rgba(0,0,0,.5);z-index:11}
+dialog{margin:auto auto 0;width:100%;max-width:560px;max-height:92vh;border:0;border-radius:22px 22px 0 0;background:var(--s1);color:var(--tx);padding:0;overflow:auto}
+dialog::backdrop{background:rgba(5,8,12,.72)}
+.f{padding:18px 16px calc(18px + env(safe-area-inset-bottom))}
+.f h3{margin:0 0 14px;font-size:18px}
+.f label{display:block;font-size:12px;color:var(--mt);margin:0 0 10px}
+.f label>*{margin-top:4px;display:block;color:var(--tx);font-size:15px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}
+.f textarea{min-height:64px;resize:vertical}
+.pv{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.pv img{width:64px;height:64px;object-fit:cover;border-radius:12px}
+.acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.acts .btn{flex:1}
+#tx{width:100%;min-height:160px;background:var(--s2);border:1px solid var(--ln);border-radius:12px;padding:10px;font:12px/1.4 ui-monospace,monospace;resize:vertical;margin-bottom:6px}
+#toast{position:fixed;left:50%;bottom:calc(92px + env(safe-area-inset-bottom));transform:translate(-50%,20px);background:var(--s2);border:1px solid var(--ln);padding:10px 16px;border-radius:12px;opacity:0;pointer-events:none;transition:.25s;z-index:30;font-size:14px}
+#toast.on{opacity:1;transform:translate(-50%,0)}
+#sp{position:fixed;inset:0;z-index:100;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;transition:opacity .5s,visibility .5s}
+#sp.out{opacity:0;visibility:hidden}
+#sp svg{width:96px;height:96px;fill:none;stroke:var(--ac);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;margin-bottom:8px}
+#sp path{stroke-dasharray:200;stroke-dashoffset:200;animation:dr 1s .1s ease forwards}
+#sp b{font-size:28px;letter-spacing:-.025em;opacity:0;animation:fi .6s .8s forwards}
+#sp small{color:var(--mt);opacity:0;animation:fi .6s 1.05s forwards}
+@keyframes dr{to{stroke-dashoffset:0}}@keyframes fi{to{opacity:1}}
+#lk{position:fixed;inset:0;z-index:90;background:var(--bg);display:none;flex-direction:column;align-items:center;justify-content:center;gap:22px;padding:20px}
+#lk.on{display:flex}
+#lkt{font-size:18px}
+#lkd{display:flex;gap:14px}#lkd i{width:14px;height:14px;border-radius:50%;border:2px solid var(--mt)}#lkd i.on{background:var(--ac);border-color:var(--ac)}
+#lkp{display:grid;grid-template-columns:repeat(3,72px);gap:12px}
+#lkp button{height:72px;border-radius:50%;border:1px solid var(--ln);background:var(--s1);font-size:26px}
+#lkp button:active{background:var(--s2)}
+.shake{animation:sk .35s}@keyframes sk{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.st{background:none;border:0;font-size:22px;color:var(--mt);padding:4px 2px;flex:none}.st.on{color:var(--warn)}
+#toast button{background:none;border:0;color:var(--ac);font-weight:650;margin-left:10px}
+@media (prefers-reduced-motion:reduce){#sp path{animation:none;stroke-dashoffset:0}#sp b,#sp small{animation:none;opacity:1}}
+body{background:radial-gradient(90% 38% at 50% -6%,color-mix(in srgb,var(--ac) 17%,transparent),transparent 70%) no-repeat fixed,var(--bg)}
+header{padding:22px 20px 4px}header h1{font-size:27px;font-weight:700;letter-spacing:-.035em}
+.hero .big{font-size:46px;font-weight:700;letter-spacing:-.045em;color:var(--gold)}
+.card{border-radius:20px;padding:11px;background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.01)),var(--s1);box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 8px 20px -12px #000;transition:transform .15s}
+.card:active{transform:scale(.985)}
+.th{width:54px;height:54px;border-radius:16px;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--c) 32%,transparent)}
+.grp,.tl div{border-radius:18px;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.008)),var(--s1);box-shadow:inset 0 1px 0 rgba(255,255,255,.05)}
+nav{left:14px;right:14px;bottom:calc(10px + env(safe-area-inset-bottom));max-width:560px;margin:0 auto;border:1px solid var(--ln);border-radius:26px;padding:6px;background:var(--nav);-webkit-backdrop-filter:blur(22px) saturate(1.5);backdrop-filter:blur(22px) saturate(1.5);box-shadow:0 14px 34px -10px #000}
+nav button{flex:1;border-radius:20px;padding:8px 0}nav button.on{background:color-mix(in srgb,var(--ac) 15%,transparent)}
+#fab{bottom:calc(90px + env(safe-area-inset-bottom));border-radius:20px;box-shadow:0 12px 30px -6px color-mix(in srgb,var(--ac) 55%,transparent)}
+.btn{box-shadow:inset 0 1px 0 rgba(255,255,255,.3)}.btn.g{box-shadow:none}
+.f::before{content:"";display:block;width:40px;height:4px;border-radius:2px;background:color-mix(in srgb,var(--mt) 50%,transparent);margin:-8px auto 16px}
+dialog{border-radius:26px 26px 0 0;border-top:1px solid var(--ln)}
+.dr{display:flex;align-items:center;gap:20px}
+.dw{position:relative;width:132px;height:132px;flex:none}
+.dn{position:absolute;inset:0;border-radius:50%;-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 17px),#000 calc(100% - 16px));mask:radial-gradient(farthest-side,transparent calc(100% - 17px),#000 calc(100% - 16px));animation:dsp .9s cubic-bezier(.2,.8,.2,1)}
+@keyframes dsp{from{transform:rotate(-120deg);opacity:0}}
+.dc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}.dc b{font-size:26px;letter-spacing:-.03em}.dc small{color:var(--mt);font-size:11px}
+.leg{grid-template-columns:1fr;flex:1;min-width:0}
+.sk{width:100%;height:60px;display:block;margin-top:18px}.skl{display:flex;justify-content:space-between;gap:8px;color:var(--mt);font-size:11px;margin-top:5px}
+.sec{display:flex;justify-content:space-between;align-items:baseline;margin-top:22px}.sec h2{margin:0 2px 10px}.sec button{background:none;border:0;color:var(--ac);font-size:13px;padding:4px}
+.tl{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:20px}
+.tl div{border:1px solid var(--ln);padding:11px 10px;min-width:0}
+.tl small{display:block;color:var(--mt);font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tl b{display:block;font-size:17px;margin:3px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums}
+.tl i{display:block;height:4px;border-radius:2px;background:var(--s2);margin-top:8px;overflow:hidden}.tl u{display:block;height:100%;background:var(--ok);border-radius:2px}
+.cr{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.cr .ei{width:50px;text-align:center;font-size:20px;padding:9px 2px;flex:none}.cr .ni{flex:1;min-width:0}
+.cr input[type=color]{width:44px;height:44px;padding:3px;flex:none;cursor:pointer}
+.cr small{color:var(--mt);min-width:18px;text-align:center}
+.xb{background:none;border:1px solid var(--ln);border-radius:10px;color:var(--bad);height:36px;min-width:36px;padding:0 8px;flex:none}
+#cl{max-height:48vh;overflow:auto;margin:0 -4px;padding:0 4px}
+.tools{position:static}
+.seg{display:flex;background:var(--s1);border:1px solid var(--ln);border-radius:14px;padding:3px;margin-top:8px}
+.seg button{flex:1;background:none;border:0;border-radius:11px;padding:8px 0;color:var(--mt);font-size:13px}
+.seg button.on{background:var(--s2);color:var(--tx);box-shadow:inset 0 1px 0 rgba(255,255,255,.07)}
+.gh{display:flex;justify-content:space-between;align-items:baseline;margin:20px 4px 8px;font-weight:650}
+.gh small{color:var(--mt);font-weight:400;font-size:13px;font-variant-numeric:tabular-nums}
+.dh{display:flex;gap:14px;align-items:center;margin-bottom:12px}
+.dh .th,.ac .th{border-radius:22px}.dh .th{width:72px;height:72px;font-size:34px}
+.dh h3{margin:0;font-size:21px;letter-spacing:-.02em}
+.ph{width:100%;height:200px;object-fit:cover;border-radius:20px;margin-bottom:14px;box-shadow:0 10px 28px -12px #000}
+.tg{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px}.tg span{background:var(--s2);border-radius:20px;padding:3px 10px;font-size:12px;color:var(--mt)}
+.dv{font-size:34px;font-weight:700;letter-spacing:-.045em;color:var(--gold);font-variant-numeric:tabular-nums}
+.sm{color:var(--mt);font-size:13px;margin:6px 0 10px}
+.st2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}
+.st2 div{background:var(--s2);border-radius:14px;padding:10px 12px;min-width:0}.st2 small{color:var(--mt);font-size:11px;display:block}.st2 b{font-size:15px;display:block;overflow:hidden;text-overflow:ellipsis}
+.ap{height:6px;background:var(--s2);border-radius:3px;overflow:hidden;margin:8px 0}.ap i{display:block;height:100%;background:var(--ac);border-radius:3px;transition:width .35s}
+.ac{text-align:center;padding:6px 0 18px}.ac .th{width:104px;height:104px;font-size:48px;margin:16px auto 14px;border-radius:30px}.ac h3{margin:0 0 4px;font-size:23px}
+.card{touch-action:pan-y;position:relative}
+.card.sr{border-color:var(--warn);background:color-mix(in srgb,var(--warn) 14%,var(--s1))}
+.card.sl{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 14%,var(--s1))}
+.sw{width:36px;height:36px;border-radius:50%;border:2px solid transparent;background:var(--c);box-shadow:inset 0 0 0 3px var(--s1)}.sw.on{border-color:var(--tx)}
+.ob{width:68px;height:68px;fill:none;stroke:var(--ac);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;margin:4px 0 10px}
+:root[data-th=light]{--bg:#f2f3f8;--s1:#fff;--s2:#eceef5;--ln:rgba(20,24,40,.1);--tx:#161a26;--mt:#667088;--gold:#9a6a08;--nav:rgba(255,255,255,.84);color-scheme:light}
+.snr{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--ln)}.snr:last-child{border:0}
+#sl{max-height:46vh;overflow:auto;margin-bottom:10px}
+:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div id="lk"><b id="lkt"></b><div id="lkd"></div><div id="lkp"></div><button class="btn g" id="lkc" data-act="lkx">Отмена</button></div>
+<div id="sp"><svg viewBox="0 0 64 64"><path d="M32 6L56 19V45L32 58L8 45V19Z"/><path d="M8 19L32 32L56 19"/><path d="M32 32V58"/></svg><b>Имущество</b><small>всё под контролем</small></div>
+<header><h1>Имущество</h1></header>
+<main id="app"></main>
+<button id="fab" aria-label="Добавить предмет">+</button>
+<nav>
+<button data-tab="home"><span>◐</span>Обзор</button>
+<button data-tab="list"><span>▤</span>Предметы</button>
+<button data-tab="data"><span>⚙</span>Данные</button>
+</nav>
+<dialog id="dlg"><form class="f" id="f" autocomplete="off">
+<h3 id="ft">Новый предмет</h3>
+<label>Название<input name="name" required maxlength="80" placeholder="Например: MacBook Pro 14"></label>
+<div class="g2">
+<label>Категория<select name="cat" id="catsel"></select></label>
+<label>Состояние<select name="cond" id="condsel"></select></label>
+<label>Где лежит<input name="loc" list="locs" maxlength="60" placeholder="Комната, шкаф, склад"></label>
+<label>Серийный номер<input name="serial" maxlength="60"></label>
+<label>Одолжено кому<input name="lent" maxlength="40" placeholder="Имя, если вещь у другого человека"></label>
+<label>Цена за штуку<input name="price" type="number" min="0" step="any" inputmode="decimal"></label>
+<label>Количество<input name="qty" type="number" min="1" step="1" inputmode="numeric" value="1"></label>
+<label>Дата покупки<input name="date" type="date"></label>
+<label>Гарантия до<input name="war" type="date"></label>
+</div>
+<datalist id="locs"></datalist>
+<label>Заметки<textarea name="note" maxlength="500"></textarea></label>
+<div class="pv" id="pv"></div>
+<input type="file" id="ph" accept="image/*" hidden>
+<div class="acts">
+<button type="button" class="btn g" data-act="pick">📷 Фото</button>
+<button type="button" class="btn g" id="dup" data-act="dup">Дублировать</button>
+<button type="button" class="btn r" id="del" data-act="del">Удалить</button>
+</div>
+<div class="acts" style="margin-top:10px">
+<button type="button" class="btn g" data-act="close">Закрыть</button>
+<button type="submit" class="btn">Сохранить</button>
+</div>
+</form></dialog>
+<dialog id="cdlg"><div class="f"><h3>Категории</h3>
+<p style="color:var(--mt);font-size:13px;margin:0 0 12px">Меняйте значок, название и цвет. Число справа показывает предметы в категории. При удалении предметы переходят в «Другое».</p>
+<div id="cl"></div>
+<div class="acts" style="margin-top:6px"><button type="button" class="btn g" data-act="cadd">+ Новая категория</button></div>
+<div class="acts" style="margin-top:8px"><button type="button" class="btn" data-act="close">Готово</button></div></div></dialog>
+<dialog id="ddlg"><div class="f" id="db"></div></dialog>
+<dialog id="adlg"><div class="f" id="ab"></div></dialog>
+<dialog id="odlg"><div class="f"><svg class="ob" viewBox="0 0 64 64"><path d="M32 6L56 19V45L32 58L8 45V19Z"/><path d="M8 19L32 32L56 19"/><path d="M32 32V58"/></svg>
+<h3 style="font-size:25px;margin-bottom:6px">Добро пожаловать</h3>
+<div class="sm" style="margin-top:0">Все вещи под контролем: стоимость, место, гарантия и проверка наличия. Данные остаются на вашем устройстве.</div>
+<div class="seg" style="margin:0 0 12px"><button type="button" data-lang="ru">Русский</button><button type="button" data-lang="en">English</button><button type="button" data-lang="de">Deutsch</button><button type="button" data-lang="zh">中文</button></div>
+<label>Валюта<select id="ocs"></select></label>
+<div class="sm">Подсказка: смахните карточку вправо — в избранное, влево — удалить.</div>
+<div class="acts"><button type="button" class="btn g" data-act="ob0">Начать с нуля</button><button type="button" class="btn" data-act="ob1">Попробовать на примере</button></div></div></dialog>
+<dialog id="sdlg"><div class="f"><h3>Точки восстановления</h3><div class="sm" style="margin-top:0">Автоматические копии хранятся на устройстве (последние 7). Перед удалением, импортом и восстановлением копия создаётся сама.</div><div id="sl"></div><div class="acts"><button type="button" class="btn g" data-act="snapnew">+ Создать точку сейчас</button></div><div class="acts" style="margin-top:8px"><button type="button" class="btn" data-act="close">Готово</button></div></div></dialog>
+<dialog id="pdlg"><div class="f"><h3 id="pt"></h3><div class="sm" id="phint" style="margin-top:0">Файл шифруется паролем (AES-256). Без пароля восстановить его невозможно: сохраните пароль надёжно.</div><label>Пароль<input id="p1" type="password" autocomplete="off"></label><label id="p2l">Повторите пароль<input id="p2" type="password" autocomplete="off"></label><div class="acts"><button type="button" class="btn g" data-act="close">Отмена</button><button type="button" class="btn" data-act="pok">Подтвердить</button></div></div></dialog>
+<dialog id="tdlg"><div class="f"><h3>Данные текстом</h3>
+<p style="color:var(--mt);font-size:13px;margin:0 0 10px">Если файл не скачивается, нажмите «Копировать» и вставьте текст в заметки. Чтобы восстановить, вставьте текст сюда и нажмите «Импортировать».</p>
+<textarea id="tx" spellcheck="false"></textarea>
+<div class="acts"><button type="button" class="btn g" data-act="cp">Копировать</button><button type="button" class="btn" data-act="itx">Импортировать</button></div>
+<div class="acts" style="margin-top:8px"><button type="button" class="btn g" data-act="close">Закрыть</button></div></div></dialog>
+<input type="file" id="imp" accept=".json,application/json" hidden>
+<div id="toast"></div>
+<script>
+const $=s=>document.querySelector(s);
+const DEF={tech:['Техника','💻','#7aa2ff'],home:['Мебель и дом','🛋️','#e0a96d'],cloth:['Одежда','👕','#c792ea'],tool:['Инструменты','🔧','#f0b35a'],sport:['Спорт','🏋️','#4fd1a1'],health:['Здоровье','🩺','#ef6b73'],book:['Книги','📚','#6fd3e0'],doc:['Документы','📄','#9aa7bd'],other:['Другое','📦','#8b8cff']};
+const CONDS=['Новое','Отличное','Хорошее','Б/у','Требует ремонта'];
+const KEY='inv_v1';
+let LANG='ru';try{const l=localStorage.getItem('inv_lang'),n=(navigator.language||'').slice(0,2);LANG=l||(['en','de','zh'].includes(n)?n:'ru')}catch(e){}
+const LOC={ru:'ru-RU',en:'en-US',de:'de-DE',zh:'zh-CN'},CUR={ru:'₽',en:'$',de:'€',zh:'¥'};
+const pub=()=>({v:3,items:S.items,cur:S.cur,cats:S.cats});
+let S={items:[],cur:CUR[LANG]||'₽'};
+try{const raw=localStorage.getItem(KEY);try{const r=JSON.parse(raw||'null');if(r&&Array.isArray(r.items))S=r}catch(e){if(raw)localStorage.setItem('inv_v1_bad',raw)}}catch(e){}
+if(!S.cats||!S.cats.other)S.cats=JSON.parse(JSON.stringify(DEF));
+const CATS=S.cats;
+let gb='none',dcur=null,au=null;
+let tab='home',q='',fc='all',fl='all',sort='new',cur=null,photo='';
+const pad=n=>String(n).padStart(2,'0');
+const fdt=d=>`${pad(d.getDate())}.${pad(d.getMonth()+1)}.${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+const fd=s=>s?s.split('-').reverse().join('.'):'—';
+const stamp=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}_${pad(d.getHours())}-${pad(d.getMinutes())}`;
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money=n=>Math.round(n).toLocaleString(LOC[LANG])+' '+S.cur;
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const val=i=>i.price*i.qty;
+const cat=i=>CATS[i.cat]||CATS.other;
+let ready=false,idbOK=false,idbC=false,pend=false,dirty=false,wt=0;
+const strip=(k,v)=>k==='photo'?undefined:v;
+function mirror(){try{localStorage.setItem(KEY,JSON.stringify(S,idbC&&!pend?strip:null));return true}catch(e){return false}}
+function save(z){S.ch=z?0:(S.ch||0)+1;S.sv=Date.now();if(!ready)dirty=true;pend=true;
+ if(!mirror()&&!idbOK){toast('Память заполнена: удалите часть фото или сделайте копию');return false}
+ clearTimeout(wt);wt=setTimeout(flush,250);return true}
+function flush(){clearTimeout(wt);if(!ready||!idbOK)return;kvPut('kv','state',S).then(()=>{pend=false;idbC=true;mirror()}).catch(()=>{idbOK=false;idbC=false;toast('Ошибка записи в хранилище')})}
+let tt,undo=null;function toast(m,u){const t=$('#toast');undo=u||null;t.innerHTML=esc(m)+(u?'<button data-act="undo">Отменить</button>':'');t.style.pointerEvents=u?'auto':'none';t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),u?5000:2200)}
+function arm(b,fn){if(b.dataset.arm){delete b.dataset.arm;b.textContent=b.dataset.t;fn();return}b.dataset.t=b.textContent;b.dataset.arm=1;b.textContent='Нажмите ещё раз';setTimeout(()=>{if(b.dataset.arm){delete b.dataset.arm;b.textContent=b.dataset.t}},2500)}
+
+function wb(i){if(!i.war)return'';const d=Math.ceil((new Date(i.war+'T23:59:59')-new Date())/864e5);
+ if(d<0)return`<em class="bad">Гарантия истекла ${fd(i.war)}</em>`;
+ if(d<=60)return`<em class="warn">Гарантия: ещё ${d} дн.</em>`;
+ return`<em class="ok">Гарантия до ${fd(i.war)}</em>`}
+const card=i=>{const c=cat(i);return`<div class="card" data-id="${i.id}"><div class="th" style="--c:${c[2]}">${i.photo?`<img src="${i.photo}" alt="">`:c[1]}</div><div class="in"><b>${esc(i.name)}</b><span>${esc(i.loc||'Место не указано')}</span>${i.miss?'<em class="bad">Не найдено при проверке</em>':i.lent?`<em class="warn">Одолжено: ${esc(i.lent)}</em>`:wb(i)}</div><button class="st ${i.fav?'on':''}" data-fav="${i.id}" aria-label="Избранное">${i.fav?'★':'☆'}</button><div class="pr">${money(val(i))}${i.qty>1?`<small>${i.qty} шт × ${money(i.price)}</small>`:''}</div></div>`};
+
+const emptyBox=`<div class="empty"><p>Здесь пока пусто. Добавьте первый предмет или загрузите пример, чтобы посмотреть, как всё выглядит.</p><button class="btn" data-act="new">Добавить предмет</button> <button class="btn g" data-act="demo">Загрузить пример</button></div>`;
+
+const td=()=>{const x=new Date();return`${x.getFullYear()}-${pad(x.getMonth()+1)}-${pad(x.getDate())}`};
+function spark(it){const d=it.filter(i=>i.date).sort((a,b)=>a.date.localeCompare(b.date));if(d.length<2)return'';let c=0;const p=d.map(i=>c+=val(i)),m=c||1,n=p.length-1;
+ const l=p.map((v,k)=>(k?'L':'M')+(k/n*300).toFixed(1)+' '+(54-v/m*48).toFixed(1)).join('');
+ return`<svg class="sk" viewBox="0 0 300 60" preserveAspectRatio="none"><defs><linearGradient id="sg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--ac)" stop-opacity=".38"/><stop offset="1" style="stop-color:var(--ac)" stop-opacity="0"/></linearGradient></defs><path d="${l}L300 60L0 60Z" fill="url(#sg)"/><path d="${l}" fill="none" style="stroke:var(--ac)" stroke-width="2" vector-effect="non-scaling-stroke"/></svg><div class="skl"><span>${fd(d[0].date)}</span><span>рост по датам покупки</span><span>${fd(d[n].date)}</span></div>`}
+function home(){
+ const it=S.items;if(!it.length)return emptyBox;
+ const tot=it.reduce((a,i)=>a+val(i),0),cnt=it.reduce((a,i)=>a+i.qty,0);
+ const by={};it.forEach(i=>{const k=CATS[i.cat]?i.cat:'other';by[k]=(by[k]||0)+val(i)});
+ const ks=Object.keys(by).sort((a,b)=>by[b]-by[a]);let a=0;
+ const st=ks.map(k=>{const p=tot?by[k]/tot*100:100/ks.length,r=`${CATS[k][2]} ${a}% ${a+p-.8}%,transparent ${a+p-.8}% ${a+p}%`;a+=p;return r}).join(',');
+ const full=Math.round(it.filter(i=>i.loc&&i.price>0&&i.date).length/it.length*100),top=[...it].sort((x,y)=>val(y)-val(x))[0],aw=it.filter(i=>i.war&&i.war>=td()).length;
+ const soon=it.filter(i=>i.war&&Math.ceil((new Date(i.war+'T23:59:59')-new Date())/864e5)<=60).sort((a,b)=>a.war.localeCompare(b.war));
+ const rec=[...it].sort((a,b)=>b.ts-a.ts).slice(0,4);
+ return`<div class="hero"><small>Общая стоимость</small><div class="big" data-v="${tot}">${money(tot)}</div><div class="meta">${it.length} предм., всего ${cnt} шт.</div>${spark(it)}</div>
+ <div class="sec"><h2>Структура</h2><button data-act="cats">Категории</button></div>
+ <div class="dr"><div class="dw"><div class="dn" style="background:conic-gradient(${st})"></div><div class="dc"><b>${ks.length}</b><small>категорий</small></div></div><div class="leg">${ks.slice(0,6).map(k=>`<div data-fc="${k}"><u style="background:${CATS[k][2]}"></u>${esc(CATS[k][1])} ${esc(CATS[k][0])}<b>${tot?Math.round(by[k]/tot*100):0}%</b></div>`).join('')}</div></div>
+ <div class="tl"><div><small>Дороже всего</small><b>${esc(top.name)}</b><small>${money(val(top))}</small></div><div><small>Заполненность</small><b>${full}%</b><i><u style="width:${full}%"></u></i></div><div><small>На гарантии</small><b>${aw}</b><small>предметов</small></div></div>
+ ${(S.ch||0)>=15?`<div class="grp" style="display:flex;align-items:center;gap:12px;margin-top:14px"><div style="flex:1"><b>Сделайте резервную копию</b><p style="margin-top:2px">Данные хранятся только на этом устройстве.</p></div><button class="btn g" data-act="txt">Сделать копию</button></div>`:''}
+ <div class="grp" style="display:flex;align-items:center;gap:12px;margin-top:14px"><div style="flex:1"><b>Инвентаризация</b><p style="margin-top:2px">${S.audit?(S.audit.miss?`Последняя проверка: не найдено ${S.audit.miss}`:'Последняя проверка: всё на месте'):'Пройдитесь по вещам и отметьте, что на месте'}</p></div><button class="btn" data-act="astart">Начать</button></div>
+ ${soon.length?`<h2>Гарантия: требует внимания</h2>${soon.slice(0,5).map(card).join('')}`:''}
+ <h2>Недавние изменения</h2>${rec.map(card).join('')}`}
+
+function filt(){
+ const a=S.items.filter(i=>(fc==='all'||(fc==='fav'?i.fav:fc==='lent'?i.lent:i.cat===fc))&&(fl==='all'||i.loc===fl)&&(!q||[i.name,i.loc,i.serial,i.note].join(' ').toLowerCase().includes(q.toLowerCase())));
+ const s={new:(x,y)=>y.ts-x.ts,name:(x,y)=>x.name.localeCompare(y.name,'ru'),price:(x,y)=>val(y)-val(x),date:(x,y)=>(y.date||'').localeCompare(x.date||'')};
+ return a.sort(s[sort])}
+function res(){const a=filt();if(!S.items.length)return emptyBox;
+ if(!a.length)return`<div class="empty"><p>Ничего не найдено. Измените запрос или фильтры.</p></div>`;
+ return`<div class="sum">Найдено: ${a.length} на ${money(a.reduce((s,i)=>s+val(i),0))}</div>`+(gb==='none'?a.map(card).join(''):(()=>{const g={},t=v=>v.reduce((s,i)=>s+val(i),0);a.forEach(i=>{const k=gb==='loc'?(i.loc||'Место не указано'):(CATS[i.cat]?i.cat:'other');(g[k]=g[k]||[]).push(i)});
+ return Object.entries(g).sort((x,y)=>t(y[1])-t(x[1])).map(([k,v])=>`<div class="gh"><span>${gb==='cat'?esc(CATS[k][1]+' '+CATS[k][0]):esc(k)}</span><small>${v.length} шт. на ${money(t(v))}</small></div>`+v.map(card).join('')).join('')})())}
+const locs=()=>[...new Set(S.items.map(i=>i.loc).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'ru'));
+function list(){
+ const n={};S.items.forEach(i=>n[i.cat]=(n[i.cat]||0)+1);
+ return`<div class="tools"><input id="q" type="search" placeholder="Поиск по названию, месту, номеру" value="${esc(q)}">
+ <div class="chips"><button data-fc="all" class="${fc==='all'?'on':''}">Все</button><button data-fc="fav" class="${fc==='fav'?'on':''}">★ Избранное</button><button data-fc="lent" class="${fc==='lent'?'on':''}">🤝 Одолжено <small style="opacity:.55">${S.items.filter(i=>i.lent).length}</small></button>${Object.entries(CATS).map(([k,c])=>`<button data-fc="${k}" class="${fc===k?'on':''}">${esc(c[1])} ${esc(c[0])} <small style="opacity:.55">${n[k]||0}</small></button>`).join('')}</div>
+ <div class="seg">${[['none','Списком'],['loc','По местам'],['cat','По категориям']].map(o=>`<button data-gb="${o[0]}" class="${gb===o[0]?'on':''}">${o[1]}</button>`).join('')}</div>
+ <div class="row2"><select id="sl" aria-label="Место"><option value="all">Все места</option>${locs().map(l=>`<option ${fl===l?'selected':''} value="${esc(l)}">${esc(l)}</option>`).join('')}</select>
+ <select id="ss" aria-label="Сортировка">${[['new','Сначала новые'],['name','По названию'],['price','По стоимости'],['date','По дате покупки']].map(o=>`<option value="${o[0]}" ${sort===o[0]?'selected':''}>${o[1]}</option>`).join('')}</select></div></div><div id="res">${res()}</div>`}
+
+function data(){
+ const by={};S.items.forEach(i=>{const l=i.loc||'Место не указано';by[l]=(by[l]||0)+val(i)});
+ return`<div class="grp"><b>Тема</b><div class="seg" style="margin-top:10px">${[['dark','Тёмная'],['light','Светлая'],['auto','Авто']].map(o=>`<button data-th="${o[0]}" class="${(S.th||'dark')===o[0]?'on':''}">${o[1]}</button>`).join('')}</div></div>
+ <div class="grp"><b>Цвет акцента</b><div class="btns" style="gap:12px">${['#a393ff','#6ea8ff','#4fd1a1','#ff8fa3','#f0b35a','#d58cff'].map(c=>`<button class="sw ${(S.acc||'#a393ff')===c?'on':''}" style="--c:${c}" data-acc="${c}" aria-label="${c}"></button>`).join('')}</div></div>
+ <div class="grp"><b>Язык / Language</b><div class="seg" style="margin-top:10px">${[['ru','Русский'],['en','English'],['de','Deutsch'],['zh','中文']].map(o=>`<button data-lang="${o[0]}" class="${LANG===o[0]?'on':''}">${o[1]}</button>`).join('')}</div></div>
+ <div class="grp"><b>Категории</b><p style="margin-top:4px">Свои значки, названия и цвета.</p><div class="btns"><button class="btn g" data-act="cats">Редактор категорий</button></div></div>
+ <div class="grp"><b>Валюта</b><div class="btns"><select id="cs" style="background:var(--s2);border:1px solid var(--ln);border-radius:12px;padding:10px">${['₽','$','€','¥','₸','₴','£'].map(c=>`<option ${S.cur===c?'selected':''}>${c}</option>`).join('')}</select></div></div>
+ <div class="grp"><b>Защита</b><p style="margin-top:4px">PIN закрывает приложение при запуске и после минуты в фоне. Это блокировка экрана, а не шифрование.</p><div class="btns"><button class="btn g" data-act="${S.pin?'pinoff':'pinon'}">${S.pin?'Отключить PIN':'Включить PIN'}</button></div></div>
+ <div class="grp"><b>Хранилище</b><div style="margin-top:6px"><div class="loc"><span>База данных</span><b id="s1">…</b></div><div class="loc"><span>Занято</span><b id="s2">—</b></div><div class="loc"><span>Защита от очистки</span><b id="s3">—</b></div></div><div class="btns"><button class="btn g" data-act="snaps">Точки восстановления</button></div></div>
+ <div class="grp"><b>Резервная копия</b><p style="margin-top:4px">Данные живут только на этом устройстве. Сохраняйте копию после крупных изменений.</p>
+ <div class="btns"><button class="btn" data-act="exj">Экспорт JSON</button><button class="btn g" data-act="exc">Экспорт CSV</button><button class="btn g" data-act="imp">Импорт JSON</button><button class="btn g" data-act="txt">Данные текстом</button><button class="btn g" data-act="encx">Зашифрованная копия</button></div></div>
+ <div class="grp"><b>Стоимость по местам</b><div style="margin-top:6px">${Object.keys(by).length?Object.entries(by).sort((a,b)=>b[1]-a[1]).map(([l,v])=>`<div class="loc"><span>${esc(l)}</span><b>${money(v)}</b></div>`).join(''):'<p>Пока нет данных.</p>'}</div></div>
+ <div class="grp"><b>Опасная зона</b><div class="btns"><button class="btn g" data-act="demo">Добавить пример</button><button class="btn r" data-act="wipe">Удалить всё</button></div></div>`}
+
+function render(){
+ document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.tab===tab));
+ $('#fab').style.display=tab==='data'?'none':'';
+ $('#app').innerHTML=tab==='home'?home():tab==='list'?list():data();
+ if(tab==='data')stInfo();}
+
+const ownTxt=d=>d<31?d+' дн.':d<365?Math.floor(d/30.4)+' мес.':(d/365).toFixed(1).replace('.',',')+' г.';
+function detail(id){const i=S.items.find(x=>x.id===id);if(!i)return;dcur=id;const c=cat(i);
+ const days=i.date?Math.floor((Date.now()-new Date(i.date+'T00:00:00'))/864e5):null,tv=val(i),pd=days>0&&tv>0?tv/days:null;
+ let wp='';if(i.war&&i.date){const a=new Date(i.date+'T00:00:00'),b=new Date(i.war+'T23:59:59'),p=Math.max(0,Math.min(100,(Date.now()-a)/(b-a)*100));wp=`<div class="ap"><i style="width:${p}%;background:${p>=100?'var(--bad)':p>85?'var(--warn)':'var(--ok)'}"></i></div>`}
+ $('#db').innerHTML=`${i.photo?`<img class="ph" src="${i.photo}" alt="">`:''}<div class="dh">${i.photo?'':`<div class="th" style="--c:${c[2]}">${c[1]}</div>`}<div style="min-width:0"><h3>${esc(i.name)}</h3><div class="tg"><span>${esc(c[1])} ${esc(c[0])}</span>${i.loc?`<span>📍 ${esc(i.loc)}</span>`:''}<span>${esc(i.cond||'')}</span>${i.lent?`<span>🤝 Одолжено: ${esc(i.lent)}</span>`:''}</div></div></div>
+ <div class="dv">${money(tv)}</div>${i.qty>1?`<div class="sm" style="margin-bottom:0">${i.qty} шт × ${money(i.price)}</div>`:''}
+ <div class="st2"><div><small>Куплено</small><b>${fd(i.date)}</b></div><div><small>Владею</small><b>${days==null?'—':ownTxt(days)}</b></div><div><small>Стоимость в день</small><b>${pd==null?'—':(pd<10?pd.toFixed(2):Math.round(pd))+' '+S.cur}</b></div><div><small>Серийный номер</small><b>${esc(i.serial||'—')}</b></div></div>
+ ${i.war?`<div class="grp" style="padding:12px"><small style="color:var(--mt)">Гарантия до ${fd(i.war)}</small>${wp}${wb(i)}</div>`:''}
+ ${i.miss?`<div class="sm bad">Не найдено при последней проверке</div>`:i.chk?`<div class="sm ok">Проверено, на месте</div>`:''}
+ ${i.note?`<div class="sm">${esc(i.note)}</div>`:''}
+ <div class="acts"><button class="btn g" data-act="dfav">${i.fav?'★ В избранном':'☆ В избранное'}</button><button class="btn" data-act="dedit">Изменить</button></div>
+ <div class="acts" style="margin-top:8px"><button class="btn g" data-act="ddup">Дублировать</button><button class="btn g" data-act="close">Закрыть</button></div>`;show('#ddlg')}
+function aui(){const b=$('#ab'),n=au.q.length;
+ if(au.i>=n){S.audit={ts:Date.now(),ok:au.ok,miss:au.miss.length};save();render();
+  b.innerHTML=`<h3>Проверка завершена</h3><div class="st2"><div><small>На месте</small><b class="ok">${au.ok}</b></div><div><small>Не найдено</small><b class="${au.miss.length?'bad':''}">${au.miss.length}</b></div></div>${au.miss.length?au.miss.map(i=>`<div class="loc"><span>${esc(i.name)}</span><span style="color:var(--mt)">${esc(i.loc||'—')}</span></div>`).join(''):'<div class="sm">Всё на месте.</div>'}<div class="acts" style="margin-top:14px"><button class="btn" data-act="close">Готово</button></div>`;return}
+ const i=au.q[au.i],c=cat(i);
+ b.innerHTML=`<div class="sm" style="margin:0">Предмет ${au.i+1} из ${n}</div><div class="ap"><i style="width:${au.i/n*100}%"></i></div><div class="ac"><div class="th" style="--c:${c[2]}">${i.photo?`<img src="${i.photo}" alt="">`:c[1]}</div><h3>${esc(i.name)}</h3><div class="sm">${esc(i.loc||'Место не указано')}</div></div><div class="acts"><button class="btn r" data-act="amiss">Не нашёл</button><button class="btn" data-act="aok">На месте</button></div><div class="acts" style="margin-top:8px"><button class="btn g" data-act="askip">Пропустить</button><button class="btn g" data-act="close">Прервать</button></div>`}
+function pv(){$('#pv').innerHTML=photo?`<img src="${photo}" alt=""><button type="button" class="btn g" data-act="rmph">Убрать фото</button>`:''}
+function openForm(id,copy){
+ const i=id?S.items.find(x=>x.id===id):{cat:CATS[fc]?fc:CATS.tech?'tech':'other',qty:1,cond:'Хорошее'};if(!i)return;
+ const dl_=$('#del');delete dl_.dataset.arm;dl_.textContent='Удалить';
+ cur=copy?null:id;photo=i.photo||'';const f=$('#f');
+ $('#ft').textContent=copy?'Копия предмета':id?'Предмет':'Новый предмет';
+ $('#catsel').innerHTML=Object.entries(CATS).map(([k,c])=>`<option value="${k}">${esc(c[1])} ${esc(c[0])}</option>`).join('');
+ $('#condsel').innerHTML=CONDS.map(c=>`<option value="${c}">${c}</option>`).join('');
+ $('#locs').innerHTML=locs().map(l=>`<option value="${esc(l)}">`).join('');
+ ['name','cat','cond','loc','serial','lent','price','qty','date','war','note'].forEach(k=>f.elements[k].value=i[k]??(k==='qty'?1:''));
+ f.elements.cat.value=CATS[i.cat]?i.cat:'other';$('#del').style.display=cur?'':'none';$('#dup').style.display=cur?'':'none';
+ pv();show('#dlg')}
+const ds=[];let skip=0,own=0;
+function show(id){const d=$(id);if(d.open)return;d._h=false;try{history.pushState({d:1},'');d._h=true}catch(e){}ds.push(d);d.showModal()}
+document.querySelectorAll('dialog').forEach(d=>d.addEventListener('close',()=>{const k=ds.indexOf(d);if(k>-1)ds.splice(k,1);if(skip>0){skip--;return}if(d._h){d._h=false;own++;try{history.back()}catch(e){own--}}}));
+addEventListener('popstate',()=>{if(own>0){own--;return}const d=ds[ds.length-1];if(d){d._h=false;skip++;d.close()}});
+$('#f').onsubmit=e=>{e.preventDefault();const v=Object.fromEntries(new FormData(e.target));
+ const o={name:v.name.trim(),cat:v.cat,cond:v.cond,loc:v.loc.trim(),serial:v.serial.trim(),lent:v.lent.trim(),price:Math.max(0,+v.price||0),qty:Math.max(1,parseInt(v.qty)||1),date:v.date,war:v.war,note:v.note.trim(),photo,ts:Date.now()};
+ if(!o.name){toast('Введите название');return}
+ if(cur)Object.assign(S.items.find(x=>x.id===cur),o);else S.items.push({id:uid(),...o});
+ if(save()){$('#dlg').close();render();if($('#ddlg').open&&S.items.some(x=>x.id===dcur))detail(dcur);toast('Сохранено')}};
+$('#ph').onchange=e=>{const fl=e.target.files[0];if(!fl)return;const r=new FileReader();
+ r.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,480/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*k;c.height=im.height*k;c.getContext('2d').drawImage(im,0,0,c.width,c.height);photo=c.toDataURL('image/jpeg',.7);pv()};im.src=r.result};r.readAsDataURL(fl);e.target.value=''};
+
+function dl(name,text,type){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),2000)}
+function csv(){const h=['Название','Категория','Место','Цена','Кол-во','Сумма','Состояние','Дата покупки','Гарантия до','Серийный номер','Заметки'];
+ const q=v=>'"'+String(v??'').replace(/"/g,'""')+'"';
+ return'\ufeff'+[h.map(x=>q(tr(x))).join(';'),...S.items.map(i=>[i.name,tr(cat(i)[0]),i.loc,i.price,i.qty,val(i),i.cond,fd(i.date),fd(i.war),i.serial,i.note].map(q).join(';'))].join('\n')}
+const okD=v=>/^\d{4}-\d{2}-\d{2}$/.test(v)?v:'';
+function doImport(txt){try{const d=JSON.parse(txt);if(!d||!Array.isArray(d.items))throw 0;
+ if(d.cats&&typeof d.cats==='object')Object.entries(d.cats).forEach(([k,c])=>{k=k.replace(/[^\w-]/g,'');if(k&&!CATS[k]&&Array.isArray(c))CATS[k]=[String(c[0]||'Без названия').slice(0,24),String(c[1]||'📦').slice(0,4),/^#[0-9a-f]{6}$/i.test(c[2])?c[2]:'#8b8cff']});
+ if(S.items.length)snap('import');const ids=new Set(S.items.map(i=>i.id));let n=0;
+ d.items.forEach(i=>{if(!i||typeof i.name!=='string')return;let id=String(i.id||'').replace(/[^\w-]/g,'')||uid();if(ids.has(id))return;ids.add(id);
+  S.items.push({id,name:i.name.slice(0,80),cat:CATS[i.cat]?i.cat:'other',cond:CONDS.includes(i.cond)?i.cond:'Хорошее',loc:String(i.loc||'').slice(0,60),serial:String(i.serial||'').slice(0,60),lent:String(i.lent||'').slice(0,40),price:Math.max(0,+i.price||0),qty:Math.max(1,parseInt(i.qty)||1),date:okD(i.date),war:okD(i.war),note:String(i.note||'').slice(0,500),photo:/^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+\/=]+$/.test(i.photo||'')?i.photo:'',fav:!!i.fav,chk:+i.chk||0,miss:!!i.miss,ts:+i.ts||Date.now()});n++});
+ if(['₽','$','€','¥','₸','₴','£'].includes(d.cur)&&!S.items.length)S.cur=d.cur;
+ save();render();toast(n?`Импортировано: ${n}`:'Новых предметов нет: все уже есть в списке');return true}
+ catch(x){toast('Не подходит: нужен JSON, созданный этим приложением');return false}}
+$('#imp').onchange=e=>{const fl=e.target.files[0];if(!fl)return;const r=new FileReader();r.onload=()=>imp(r.result);r.readAsText(fl);e.target.value=''};
+
+function demo(){const t=Date.now(),d=n=>{const x=new Date(Date.now()+n*864e5);return`${x.getFullYear()}-${pad(x.getMonth()+1)}-${pad(x.getDate())}`};
+ [['Ноутбук 14"','tech','Кабинет',150000,1,-300,d(430),'Отличное'],['Наушники с шумодавом','tech','Кабинет',28000,1,-340,d(25),'Хорошее'],['Эргономичное кресло','home','Кабинет',42000,1,-200,d(-10),'Хорошее'],['Набор инструментов','tool','Гараж',9500,1,-500,'','Б/у'],['Гантели разборные','sport','Балкон',12000,2,-120,'','Новое'],['Тонометр','health','Спальня',3500,1,-60,d(300),'Новое']]
+ .forEach((a,k)=>S.items.push({id:uid(),name:tr(a[0]),cat:a[1],loc:tr(a[2]),price:a[3],qty:a[4],date:d(a[5]),war:a[6],cond:a[7],serial:'',note:'',photo:'',ts:t-k*3600e3}));
+ save();render();toast('Пример добавлен')}
+
+function remove(id){const k=S.items.findIndex(x=>x.id===id),g=S.items[k];if(!g)return;S.items.splice(k,1);save();render();toast('Удалено',()=>{S.items.splice(Math.min(k,S.items.length),0,g);save();render()})}
+let sw=null,swt=0;
+document.addEventListener('pointerdown',e=>{const c=e.target.closest('.card');sw=c&&!e.target.closest('.st')?{c,x:e.clientX,y:e.clientY,dx:0,on:0}:null});
+document.addEventListener('pointermove',e=>{if(!sw)return;const dx=e.clientX-sw.x,dy=e.clientY-sw.y;
+ if(!sw.on){if(Math.abs(dy)>10&&Math.abs(dy)>Math.abs(dx)){sw=null;return}if(Math.abs(dx)<12)return;sw.on=1;sw.c.style.transition='none'}
+ sw.dx=dx;sw.c.style.transform=`translateX(${Math.max(-130,Math.min(130,dx))}px)`;sw.c.classList.toggle('sr',dx>80);sw.c.classList.toggle('sl',dx<-80)});
+function swEnd(x){if(!sw)return;const{c,dx,on}=sw;sw=null;if(!on)return;swt=Date.now();c.style.transition='';c.style.transform='';c.classList.remove('sr','sl');if(x)return;
+ const id=c.dataset.id,i=S.items.find(v=>v.id===id);if(!i)return;
+ if(dx>80){i.fav=!i.fav;save();render();toast(i.fav?'В избранном':'Убрано из избранного')}else if(dx<-80)remove(id)}
+document.addEventListener('pointerup',()=>swEnd());document.addEventListener('pointercancel',()=>swEnd(1));
+document.addEventListener('click',e=>{if(Date.now()-swt<350&&e.target.closest('.card'))return;
+ const t=e.target.closest('[data-tab],[data-id],[data-fc],[data-act],[data-k],[data-fav],[data-cdel],[data-gb],[data-lang],[data-acc],[data-th],[data-srest],#fab');if(!t)return;
+ try{navigator.vibrate&&navigator.vibrate(8)}catch(_){}
+ if(t.dataset.k){key(t.dataset.k);return}
+ if(t.dataset.gb){gb=t.dataset.gb;render();return}
+ if(t.dataset.lang){setLang(t.dataset.lang);return}
+ if(t.dataset.th){S.th=t.dataset.th;save();applyTh();render();return}
+ if(t.dataset.srest){restore(+t.dataset.srest,t);return}
+ if(t.dataset.acc){S.acc=t.dataset.acc;document.documentElement.style.setProperty('--ac',S.acc);save();render();return}
+ if(t.dataset.cdel){const k=t.dataset.cdel;arm(t,()=>{S.items.forEach(i=>{if(i.cat===k)i.cat='other'});delete CATS[k];if(fc===k)fc='all';save();cl();toast('Категория удалена, предметы в «Другое»')});return}
+ if(t.dataset.fav){const i=S.items.find(x=>x.id===t.dataset.fav);if(i){i.fav=!i.fav;save();tab==='list'?$('#res').innerHTML=res():render()}return}
+ if(t.id==='fab')return openForm();
+ if(t.dataset.tab){tab=t.dataset.tab;render();scrollTo(0,0);return}
+ if(t.dataset.fc){fc=t.dataset.fc;tab='list';render();scrollTo(0,0);return}
+ if(t.dataset.id)return detail(t.dataset.id);
+ const a=t.dataset.act;
+ if(a==='new')openForm();
+ else if(a==='demo')demo();
+ else if(a==='close')t.closest('dialog').close();
+ else if(a==='pick')$('#ph').click();
+ else if(a==='rmph'){photo='';pv()}
+ else if(a==='dup')openForm(cur,true);
+ else if(a==='del')arm(t,()=>{const k=S.items.findIndex(x=>x.id===cur),g=S.items[k];if(!g)return;S.items.splice(k,1);save();$('#dlg').close();if($('#ddlg').open)$('#ddlg').close();render();toast('Удалено',()=>{S.items.splice(Math.min(k,S.items.length),0,g);save();render()})});
+ else if(a==='exj'){dl(`inventory_${stamp(new Date())}.json`,JSON.stringify(pub(),null,1),'application/json');save(1);render();toast('Копия сохранена')}
+ else if(a==='exc'){dl(`inventory_${stamp(new Date())}.csv`,csv(),'text/csv');toast('CSV сохранён')}
+ else if(a==='imp')$('#imp').click();
+ else if(a==='undo'){const u=undo;undo=null;$('#toast').classList.remove('on');u&&u()}
+ else if(a==='cats'){cl();show('#cdlg')}
+ else if(a==='cadd'){const e=['🎒','🎮','🍳','🧰','🎧','🪴','🚲','📷','🧴','🎸'],p=['#7aa2ff','#e0a96d','#c792ea','#4fd1a1','#ef6b73','#6fd3e0','#f0b35a'],k='c'+Date.now().toString(36);CATS[k]=['Новая категория',e[Math.random()*e.length|0],p[Math.random()*p.length|0]];save();cl();const r=$('#cl').lastElementChild;r.scrollIntoView({block:'center'});r.querySelector('.ni').select()}
+ else if(a==='dedit')openForm(dcur);
+ else if(a==='ddup')openForm(dcur,true);
+ else if(a==='dfav'){const i=S.items.find(x=>x.id===dcur);if(i){i.fav=!i.fav;save();detail(dcur);render()}}
+ else if(a==='astart'){if(!S.items.length)return toast('Сначала добавьте предметы');au={q:[...S.items].sort((x,y)=>(x.loc||'').localeCompare(y.loc||'','ru')||x.name.localeCompare(y.name,'ru')),i:0,ok:0,miss:[]};aui();show('#adlg')}
+ else if(a==='aok'||a==='amiss'){const i=au&&au.q[au.i];if(!i)return;i.chk=Date.now();i.miss=a==='amiss';if(i.miss)au.miss.push(i);else au.ok++;au.i++;save();aui()}
+ else if(a==='askip'){if(au&&au.i<au.q.length){au.i++;aui()}}
+ else if(a==='ob0'||a==='ob1'){S.ob=1;save();$('#odlg').close();if(a==='ob1')demo()}
+ else if(a==='snaps')openSnaps();
+ else if(a==='snapnew'){snap('manual').then(()=>{openSnaps();toast('Точка создана')})}
+ else if(a==='encx')pwd('enc');
+ else if(a==='pok')pokay();
+ else if(a==='pinon')lock('set1');
+ else if(a==='pinoff')lock('off');
+ else if(a==='lkx')$('#lk').classList.remove('on');
+ else if(a==='txt'){$('#tx').value=JSON.stringify(pub());show('#tdlg')}
+ else if(a==='cp'){const x=$('#tx');x.select();let done=false;try{done=document.execCommand('copy')}catch(_){}
+  if(navigator.clipboard)navigator.clipboard.writeText(x.value).then(()=>{save(1);toast('Скопировано')},()=>toast(done?'Скопировано':'Выделите текст и скопируйте вручную'));else toast(done?'Скопировано':'Выделите текст и скопируйте вручную')}
+ else if(a==='itx'){if(imp($('#tx').value))$('#tdlg').close()}
+ else if(a==='wipe')arm(t,()=>{snap('wipe');const bk=S.items;S.items=[];save();render();toast('Всё удалено',()=>{S.items=bk;save();render()})})});
+document.addEventListener('input',e=>{const r=e.target.closest('.cr');if(r&&e.target.dataset.f&&CATS[r.dataset.cid]){CATS[r.dataset.cid][+e.target.dataset.f]=e.target.value;save();return}
+ if(e.target.id==='q'){q=e.target.value;$('#res').innerHTML=res()}});
+document.addEventListener('change',e=>{const id=e.target.id;
+ if(id==='sl'){fl=e.target.value;$('#res').innerHTML=res()}
+ else if(id==='ss'){sort=e.target.value;$('#res').innerHTML=res()}
+ else if(id==='cs'||id==='ocs'){S.cur=e.target.value;save();render();toast('Валюта изменена')}});
+document.querySelectorAll('dialog').forEach(d=>d.addEventListener('click',e=>{if(e.target===d)d.close()}));
+function cl(){const n={};S.items.forEach(i=>n[i.cat]=(n[i.cat]||0)+1);
+ $('#cl').innerHTML=Object.entries(CATS).map(([k,c])=>`<div class="cr" data-cid="${k}"><input class="ei" value="${esc(c[1])}" maxlength="4" data-f="1" aria-label="Значок"><input class="ni" value="${esc(tr(c[0]))}" maxlength="24" data-f="0" aria-label="Название"><input type="color" value="${c[2]}" data-f="2" aria-label="Цвет"><small>${n[k]||0}</small>${k==='other'?'<span style="width:36px"></span>':`<button class="xb" data-cdel="${k}" aria-label="Удалить">✕</button>`}</div>`).join('')}
+$('#cdlg').addEventListener('close',()=>{Object.values(CATS).forEach(c=>{c[0]=c[0].trim()||'Без названия';c[1]=c[1].trim()||'📦'});save();render()});
+const hp=p=>{let a=3735928559,b=1103547991;for(const c of 'inv|'+p){const k=c.charCodeAt(0);a=Math.imul(a^k,2654435761);b=Math.imul(b^k,1597334677)}return(a>>>0).toString(36)+(b>>>0).toString(36)};
+let lm='unlock',lb='',lt='';
+$('#lkp').innerHTML=[1,2,3,4,5,6,7,8,9,'',0,'⌫'].map(k=>k===''?'<span></span>':`<button data-k="${k}">${k}</button>`).join('');
+function lkui(){$('#lkt').textContent={unlock:'Введите PIN',set1:'Придумайте PIN из 4 цифр',set2:'Повторите PIN',off:'Введите PIN, чтобы отключить'}[lm];
+ $('#lkd').innerHTML=[0,1,2,3].map(i=>`<i class="${i<lb.length?'on':''}"></i>`).join('');$('#lkc').style.display=lm==='unlock'?'none':''}
+function lock(m){document.querySelectorAll('dialog[open]').forEach(d=>d.close());lm=m;lb='';lt='';$('#lk').classList.add('on');lkui()}
+function bad(m){toast(m);try{navigator.vibrate&&navigator.vibrate(60)}catch(_){}const d=$('#lkd');d.classList.add('shake');setTimeout(()=>d.classList.remove('shake'),400);lb='';lkui()}
+function key(k){if(k==='⌫')lb=lb.slice(0,-1);else if(lb.length<4)lb+=k;lkui();if(lb.length<4)return;
+ setTimeout(()=>{if(lm==='unlock'||lm==='off'){if(hp(lb)!==S.pin)return bad('Неверный PIN');
+   $('#lk').classList.remove('on');if(lm==='off'){S.pin='';save();render();toast('PIN отключён')}}
+  else if(lm==='set1'){lt=lb;lb='';lm='set2';lkui()}
+  else if(lb!==lt){lm='set1';bad('PIN не совпал, начните заново');lkui()}
+  else{S.pin=hp(lb);save();$('#lk').classList.remove('on');render();toast('PIN включён')}},120)}
+let hid=0;document.addEventListener('visibilitychange',()=>{if(document.hidden)hid=Date.now();else if(S.pin&&hid&&Date.now()-hid>6e4)lock('unlock')});
+function countUp(){const e=$('.big');if(!e||tab!=='home')return;const v=+e.dataset.v,t0=performance.now();(function f(n){const k=Math.min(1,(n-t0)/800);e.textContent=money(v*(1-Math.pow(1-k,3)));if(k<1)requestAnimationFrame(f)})(t0)}
+if(S.pin)lock('unlock');
+setTimeout(()=>{$('#sp').classList.add('out');countUp();if(!S.ob&&!S.items.length&&!S.pin)setTimeout(()=>show('#odlg'),250)},1700);
+$('#odlg').addEventListener('close',()=>{S.ob=1;save()});
+if('serviceWorker' in navigator&&/^https?:/.test(location.protocol))navigator.serviceWorker.register('sw.js').catch(()=>{});
+const DBN='inv_db';let _db=null;
+const dbp=()=>_db||(_db=new Promise((ok,no)=>{try{const r=indexedDB.open(DBN,1);r.onupgradeneeded=()=>{r.result.createObjectStore('kv');r.result.createObjectStore('snap')};r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)}catch(e){no(e)}}));
+const rq=(st,m,f)=>dbp().then(d=>new Promise((ok,no)=>{const t=d.transaction(st,m),o=f(t.objectStore(st));t.oncomplete=()=>ok(o&&o.result);t.onerror=()=>no(t.error)}));
+const kvGet=(st,k)=>rq(st,'readonly',o=>o.get(k)),kvPut=(st,k,v)=>rq(st,'readwrite',o=>o.put(v,k)),kvDel=(st,k)=>rq(st,'readwrite',o=>o.delete(k)),kvAll=st=>rq(st,'readonly',o=>o.getAll()),kvKeys=st=>rq(st,'readonly',o=>o.getAllKeys());
+const clone=typeof structuredClone==='function'?structuredClone:o=>JSON.parse(JSON.stringify(o));
+function fix(){S.items=S.items.filter(i=>i&&i.id&&typeof i.name==='string');const u=new Set();S.items.forEach(i=>{if(u.has(i.id))i.id=uid();u.add(i.id);i.price=+i.price||0;i.qty=Math.max(1,parseInt(i.qty)||1)})}
+function setCats(c){Object.keys(CATS).forEach(k=>delete CATS[k]);Object.assign(CATS,c&&c.other?c:JSON.parse(JSON.stringify(DEF)))}
+function adopt(A){['items','cur','pin','ob','acc','th','audit','sv','ch'].forEach(k=>S[k]=A[k]);setCats(A.cats)}
+function snap(reason){if(!idbOK||(!S.items.length&&reason!=='manual'))return Promise.resolve();const ts=Date.now(),data=clone({items:S.items,cats:S.cats,cur:S.cur,audit:S.audit});
+ return kvPut('snap',ts,{ts,reason,n:S.items.length,data}).then(()=>kvKeys('snap')).then(k=>Promise.all(k.sort((a,b)=>b-a).slice(7).map(x=>kvDel('snap',x)))).catch(()=>{})}
+const RS={auto:'Автоматически',manual:'Вручную',wipe:'Перед очисткой',import:'Перед импортом',restore:'Перед восстановлением'};
+async function openSnaps(){const a=(await kvAll('snap')).sort((x,y)=>y.ts-x.ts);
+ $('#sl').innerHTML=a.length?a.map(r=>`<div class="snr"><div><b>${fdt(new Date(r.ts))}</b><div class="sm" style="margin:0"><span>${RS[r.reason]||RS.auto}</span> <span>${r.n} предм.</span></div></div><button class="btn g" data-srest="${r.ts}">Восстановить</button></div>`).join(''):'<div class="sm">Пока нет точек восстановления.</div>';show('#sdlg')}
+function restore(ts,t){arm(t,async()=>{const r=await kvGet('snap',ts);if(!r)return;await snap('restore');const d=r.data;S.items=d.items;S.cur=d.cur||S.cur;S.audit=d.audit;setCats(d.cats);fix();save();render();$('#sdlg').close();toast('Восстановлено')})}
+async function stInfo(){if(!$('#s1'))return;$('#s1').textContent=idbOK?'IndexedDB':'localStorage';try{const e=await navigator.storage.estimate(),p=await navigator.storage.persisted();if($('#s2')){$('#s2').textContent=(e.usage/1048576).toFixed(1)+' MB';$('#s3').textContent=p?'Да':'Нет'}}catch(x){}}
+async function boot(){try{await dbp();idbOK=true;const A=await kvGet('kv','state');
+ if(A&&Array.isArray(A.items)){if(dirty||(S.sv||0)>(A.sv||0)){const m=new Map(A.items.map(i=>[i.id,i]));S.items.forEach(i=>{const a=m.get(i.id);if(!i.photo&&a&&a.photo)i.photo=a.photo})}else adopt(A)}
+ fix();ready=true;await kvPut('kv','state',S);pend=false;idbC=true;mirror();applyTh();render();
+ const k=await kvKeys('snap');if(S.items.length&&Date.now()-(k.length?Math.max(...k):0)>72e6)snap('auto')}catch(e){idbOK=false;idbC=false;ready=true}}
+addEventListener('pagehide',flush);document.addEventListener('visibilitychange',()=>{if(document.hidden)flush()});
+const mq=matchMedia('(prefers-color-scheme: light)');
+function applyTh(){const t=S.th||'dark',l=t==='light'||(t==='auto'&&mq.matches);document.documentElement.dataset.th=l?'light':'dark';const m=document.querySelector('meta[name=theme-color]');if(m)m.content=l?'#f2f3f8':'#090c12'}
+if(mq.addEventListener)mq.addEventListener('change',applyTh);
+const b64=u=>{let s='';for(let i=0;i<u.length;i+=8192)s+=String.fromCharCode.apply(null,u.subarray(i,i+8192));return btoa(s)},ub=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+async function kd(pw,salt){const b=await crypto.subtle.importKey('raw',new TextEncoder().encode(pw),'PBKDF2',false,['deriveKey']);return crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:200000,hash:'SHA-256'},b,{name:'AES-GCM',length:256},false,['encrypt','decrypt'])}
+async function enc(t,pw){const s=crypto.getRandomValues(new Uint8Array(16)),iv=crypto.getRandomValues(new Uint8Array(12)),k=await kd(pw,s),c=new Uint8Array(await crypto.subtle.encrypt({name:'AES-GCM',iv},k,new TextEncoder().encode(t)));return JSON.stringify({enc:1,app:'inventory',s:b64(s),i:b64(iv),d:b64(c)})}
+async function dec(o,pw){const k=await kd(pw,ub(o.s));return new TextDecoder().decode(await crypto.subtle.decrypt({name:'AES-GCM',iv:ub(o.i)},k,ub(o.d)))}
+let pm='',pend2=null;
+function pwd(m){pm=m;$('#pt').textContent=m==='enc'?'Зашифрованная копия':'Введите пароль от копии';$('#p1').value='';$('#p2').value='';$('#p2l').style.display=m==='enc'?'':'none';$('#phint').style.display=m==='enc'?'':'none';show('#pdlg')}
+async function pokay(){const p=$('#p1').value;if(!window.crypto||!crypto.subtle){toast('Шифрование недоступно на этом устройстве');return}
+ try{if(pm==='enc'){if(p.length<6||p!==$('#p2').value){toast('Пароль короче 6 символов или не совпадает');return}
+  const out=await enc(JSON.stringify(pub()),p);dl(`inventory_enc_${stamp(new Date())}.json`,out,'application/json');save(1);$('#pdlg').close();render();toast('Копия сохранена')}
+ else{const t=await dec(pend2,p);$('#pdlg').close();doImport(t)}}catch(e){toast('Неверный пароль или повреждённый файл')}}
+function imp(t){let o;try{o=JSON.parse(t)}catch(e){}if(o&&o.enc){pend2=o;pwd('dec');return true}return doImport(t)}
+const T=`Отмена|Cancel|Abbrechen|取消
+Имущество|Belongings|Besitz|我的物品
+всё под контролем|everything under control|alles unter Kontrolle|一切尽在掌控
+Добавить предмет|Add item|Objekt hinzufügen|添加物品
+Обзор|Overview|Übersicht|概览
+Предметы|Items|Objekte|物品
+Данные|Data|Daten|数据
+Новый предмет|New item|Neues Objekt|新物品
+Предмет|Item|Objekt|物品
+Название|Name|Name|名称
+Например: MacBook Pro 14|e.g. MacBook Pro 14|z. B. MacBook Pro 14|例如：MacBook Pro 14
+Категория|Category|Kategorie|类别
+Состояние|Condition|Zustand|状态
+Где лежит|Location|Standort|存放位置
+Комната, шкаф, склад|Room, closet, storage|Zimmer, Schrank, Lager|房间、柜子、仓库
+Серийный номер|Serial number|Seriennummer|序列号
+Цена за штуку|Price per unit|Preis pro Stück|单价
+Количество|Quantity|Menge|数量
+Дата покупки|Purchase date|Kaufdatum|购买日期
+Гарантия до|Warranty until|Garantie bis|保修至
+Заметки|Notes|Notizen|备注
+Фото|Photo|Foto|照片
+Дублировать|Duplicate|Duplizieren|创建副本
+Удалить|Delete|Löschen|删除
+Закрыть|Close|Schließen|关闭
+Сохранить|Save|Speichern|保存
+Категории|Categories|Kategorien|类别
+Меняйте значок, название и цвет. Число справа показывает предметы в категории. При удалении предметы переходят в «Другое».|Change the icon, name and color. The number on the right shows the items in a category. When a category is deleted, its items move to “Other”.|Symbol, Name und Farbe ändern. Die Zahl rechts zeigt die Objekte der Kategorie. Beim Löschen wandern die Objekte nach „Sonstiges“.|可修改图标、名称和颜色。右侧数字为该类别的物品数。删除类别后，其中的物品将移至“其他”。
+Новая категория|New category|Neue Kategorie|新类别
+Готово|Done|Fertig|完成
+Данные текстом|Data as text|Daten als Text|文本数据
+Если файл не скачивается, нажмите «Копировать» и вставьте текст в заметки. Чтобы восстановить, вставьте текст сюда и нажмите «Импортировать».|If the file does not download, tap “Copy” and paste the text into your notes. To restore, paste the text here and tap “Import”.|Wenn der Download nicht klappt, tippe auf „Kopieren“ und füge den Text in deine Notizen ein. Zum Wiederherstellen Text hier einfügen und auf „Importieren“ tippen.|如果文件无法下载，请点“复制”，把文本粘贴到备忘录。恢复时，把文本粘贴到这里并点“导入”。
+Копировать|Copy|Kopieren|复制文本
+Импортировать|Import|Importieren|导入
+Техника|Electronics|Technik|电子产品
+Мебель и дом|Furniture & home|Möbel & Haus|家具家居
+Одежда|Clothing|Kleidung|服饰
+Инструменты|Tools|Werkzeuge|工具
+Спорт|Sports|Sport|运动
+Здоровье|Health|Gesundheit|健康
+Книги|Books|Bücher|书籍
+Документы|Documents|Dokumente|文件
+Другое|Other|Sonstiges|其他
+Новое|New|Neu|全新
+Отличное|Excellent|Ausgezeichnet|极好
+Хорошее|Good|Gut|良好
+Б/у|Used|Gebraucht|二手
+Требует ремонта|Needs repair|Reparaturbedürftig|需维修
+Память заполнена: удалите часть фото или сделайте копию|Storage is full: delete some photos or make a backup|Speicher voll: Fotos löschen oder Sicherung erstellen|存储已满：请删除部分照片或进行备份
+Отменить|Undo|Rückgängig|撤销
+Нажмите ещё раз|Tap again|Nochmal tippen|再点一次
+Место не указано|No location|Kein Standort|未指定位置
+Не найдено при проверке|Not found in check|Bei Prüfung nicht gefunden|盘点时未找到
+Избранное|Favorites|Favoriten|收藏
+Здесь пока пусто. Добавьте первый предмет или загрузите пример, чтобы посмотреть, как всё выглядит.|Nothing here yet. Add your first item or load a sample to see how it looks.|Noch nichts hier. Füge dein erstes Objekt hinzu oder lade ein Beispiel.|这里还是空的。添加第一件物品，或加载示例看看效果。
+Загрузить пример|Load sample|Beispiel laden|加载示例
+рост по датам покупки|growth by purchase date|Wachstum nach Kaufdatum|按购买日期的增长
+Общая стоимость|Total value|Gesamtwert|总价值
+Структура|Breakdown|Aufteilung|构成
+категорий|categories|Kategorien|个类别
+Дороже всего|Most valuable|Wertvollstes|最贵
+Заполненность|Completeness|Vollständigkeit|完整度
+На гарантии|Under warranty|In Garantie|保修中
+предметов|items|Objekte|件物品
+Инвентаризация|Inventory check|Inventur|盘点
+Последняя проверка: всё на месте|Last check: everything in place|Letzte Prüfung: alles da|上次盘点：全部在位
+Пройдитесь по вещам и отметьте, что на месте|Walk through your things and mark what is in place|Geh deine Sachen durch und markiere, was da ist|逐件检查并标记哪些物品在位
+Начать|Start|Starten|开始
+Гарантия: требует внимания|Warranty: needs attention|Garantie: braucht Aufmerksamkeit|保修：需要关注
+Недавние изменения|Recent changes|Letzte Änderungen|最近更改
+Ничего не найдено. Измените запрос или фильтры.|Nothing found. Change the search or filters.|Nichts gefunden. Suche oder Filter ändern.|未找到结果。请修改搜索或筛选条件。
+Поиск по названию, месту, номеру|Search by name, location, number|Suche nach Name, Ort, Nummer|按名称、位置、编号搜索
+Все|All|Alle|全部
+Списком|List|Liste|列表
+По местам|By location|Nach Ort|按位置
+По категориям|By category|Nach Kategorie|按类别
+Место|Location|Ort|位置
+Все места|All locations|Alle Orte|所有位置
+Сортировка|Sort|Sortierung|排序
+Сначала новые|Newest first|Neueste zuerst|最新优先
+По названию|By name|Nach Name|按名称
+По стоимости|By value|Nach Wert|按价值
+По дате покупки|By purchase date|Nach Kaufdatum|按购买日期
+Свои значки, названия и цвета.|Your own icons, names and colors.|Eigene Symbole, Namen und Farben.|自定义图标、名称和颜色。
+Редактор категорий|Category editor|Kategorien bearbeiten|类别编辑器
+Валюта|Currency|Währung|货币
+Защита|Security|Schutz|安全
+PIN закрывает приложение при запуске и после минуты в фоне. Это блокировка экрана, а не шифрование.|The PIN locks the app on launch and after a minute in the background. It is a screen lock, not encryption.|Der PIN sperrt die App beim Start und nach einer Minute im Hintergrund. Das ist eine Bildschirmsperre, keine Verschlüsselung.|PIN 会在启动时以及后台超过一分钟后锁定应用。这只是屏幕锁，并非加密。
+Отключить PIN|Disable PIN|PIN deaktivieren|关闭 PIN
+Включить PIN|Enable PIN|PIN aktivieren|开启 PIN
+Резервная копия|Backup|Sicherung|备份
+Данные живут только на этом устройстве. Сохраняйте копию после крупных изменений.|Data lives only on this device. Back up after major changes.|Die Daten bleiben nur auf diesem Gerät. Sichere nach größeren Änderungen.|数据仅保存在本设备上。重大改动后请备份。
+Экспорт JSON|Export JSON|JSON exportieren|导出 JSON
+Экспорт CSV|Export CSV|CSV exportieren|导出 CSV
+Импорт JSON|Import JSON|JSON importieren|导入 JSON
+Стоимость по местам|Value by location|Wert nach Ort|按位置的价值
+Пока нет данных.|No data yet.|Noch keine Daten.|暂无数据。
+Опасная зона|Danger zone|Gefahrenzone|危险区域
+Добавить пример|Add sample|Beispiel hinzufügen|添加示例
+Удалить всё|Delete all|Alles löschen|全部删除
+Куплено|Purchased|Gekauft|购买于
+Владею|Owned for|Besitzdauer|已拥有
+Стоимость в день|Cost per day|Kosten pro Tag|每日成本
+Не найдено при последней проверке|Not found in last check|Bei letzter Prüfung nicht gefunden|上次盘点未找到
+Проверено, на месте|Checked, in place|Geprüft, vorhanden|已检查，在位
+В избранном|In favorites|In Favoriten|已收藏
+В избранное|Add to favorites|Zu Favoriten|加入收藏
+Изменить|Edit|Bearbeiten|编辑
+Проверка завершена|Check complete|Prüfung abgeschlossen|盘点完成
+На месте|In place|Vorhanden|在位
+Не найдено|Not found|Nicht gefunden|未找到
+Всё на месте.|Everything is in place.|Alles ist da.|全部在位。
+Не нашёл|Can’t find it|Nicht gefunden|没找到
+Пропустить|Skip|Überspringen|跳过
+Прервать|Stop|Beenden|中止
+Убрать фото|Remove photo|Foto entfernen|移除照片
+Копия предмета|Item copy|Objektkopie|物品副本
+Введите название|Enter a name|Namen eingeben|请输入名称
+Сохранено|Saved|Gespeichert|已保存
+Цена|Price|Preis|价格
+Кол-во|Qty|Anz.|数量
+Сумма|Total|Summe|总额
+Без названия|Untitled|Ohne Titel|未命名
+Новых предметов нет: все уже есть в списке|No new items: all are already in the list|Keine neuen Objekte: alle sind schon in der Liste|没有新物品：均已在列表中
+Не подходит: нужен JSON, созданный этим приложением|Not valid: a JSON created by this app is required|Ungültig: JSON aus dieser App erforderlich|无效：需要由本应用创建的 JSON
+Ноутбук 14"|Laptop 14"|Laptop 14"|笔记本电脑 14"
+Кабинет|Study|Arbeitszimmer|书房
+Наушники с шумодавом|Noise-cancelling headphones|Kopfhörer mit Geräuschunterdrückung|降噪耳机
+Эргономичное кресло|Ergonomic chair|Ergonomischer Stuhl|人体工学椅
+Набор инструментов|Tool set|Werkzeugset|工具套装
+Гараж|Garage|Garage|车库
+Гантели разборные|Adjustable dumbbells|Verstellbare Hanteln|可调式哑铃
+Балкон|Balcony|Balkon|阳台
+Тонометр|Blood pressure monitor|Blutdruckmessgerät|血压计
+Спальня|Bedroom|Schlafzimmer|卧室
+Пример добавлен|Sample added|Beispiel hinzugefügt|示例已添加
+Категория удалена, предметы в «Другое»|Category deleted, items moved to “Other”|Kategorie gelöscht, Objekte in „Sonstiges“|类别已删除，物品已移至“其他”
+Удалено|Deleted|Gelöscht|已删除
+Копия сохранена|Backup saved|Sicherung gespeichert|备份已保存
+CSV сохранён|CSV saved|CSV gespeichert|CSV 已保存
+Сначала добавьте предметы|Add some items first|Füge zuerst Objekte hinzu|请先添加物品
+Скопировано|Copied|Kopiert|已复制
+Выделите текст и скопируйте вручную|Select the text and copy it manually|Text markieren und manuell kopieren|请选中文本并手动复制
+Всё удалено|Everything deleted|Alles gelöscht|已全部删除
+Валюта изменена|Currency changed|Währung geändert|货币已更改
+Значок|Icon|Symbol|图标
+Цвет|Color|Farbe|颜色
+Введите PIN|Enter PIN|PIN eingeben|输入 PIN
+Придумайте PIN из 4 цифр|Create a 4-digit PIN|4-stelligen PIN festlegen|设置 4 位 PIN
+Повторите PIN|Repeat PIN|PIN wiederholen|再次输入 PIN
+Введите PIN, чтобы отключить|Enter PIN to disable|PIN zum Deaktivieren eingeben|输入 PIN 以关闭
+Неверный PIN|Wrong PIN|Falscher PIN|PIN 错误
+PIN отключён|PIN disabled|PIN deaktiviert|PIN 已关闭
+PIN включён|PIN enabled|PIN aktiviert|PIN 已开启
+PIN не совпал, начните заново|PINs don’t match, start over|PINs stimmen nicht überein, neu beginnen|两次 PIN 不一致，请重新开始
+Язык / Language|Language|Sprache|语言
+Добро пожаловать|Welcome|Willkommen|欢迎
+Все вещи под контролем: стоимость, место, гарантия и проверка наличия. Данные остаются на вашем устройстве.|Everything under control: value, location, warranty and inventory checks. Your data stays on your device.|Alles unter Kontrolle: Wert, Ort, Garantie und Inventur. Deine Daten bleiben auf deinem Gerät.|一切尽在掌控：价值、位置、保修与盘点。数据只保存在您的设备上。
+Подсказка: смахните карточку вправо — в избранное, влево — удалить.|Tip: swipe a card right to favorite, left to delete.|Tipp: Karte nach rechts wischen = Favorit, nach links = löschen.|提示：卡片右滑收藏，左滑删除。
+Начать с нуля|Start empty|Leer starten|从空白开始
+Попробовать на примере|Try with a sample|Mit Beispiel testen|用示例试试
+Сделайте резервную копию|Back up your data|Sichere deine Daten|请备份数据
+Данные хранятся только на этом устройстве.|Data is stored only on this device.|Daten werden nur auf diesem Gerät gespeichert.|数据仅保存在本设备上。
+Сделать копию|Back up|Sichern|备份
+Одолжено кому|Lent to|Verliehen an|借给谁
+Имя, если вещь у другого человека|Name, if someone else has it|Name, falls jemand anderes es hat|如果物品在别人手里，请填写姓名
+Одолжено|Lent out|Verliehen|已借出
+Цвет акцента|Accent color|Akzentfarbe|强调色
+Убрано из избранного|Removed from favorites|Aus Favoriten entfernt|已取消收藏
+Тема|Theme|Design|主题
+Авто|Auto|Auto|自动
+Тёмная|Dark|Dunkel|深色
+Светлая|Light|Hell|浅色
+Хранилище|Storage|Speicher|存储
+База данных|Database|Datenbank|数据库
+Занято|Used|Belegt|已用
+Защита от очистки|Protected from clearing|Löschschutz|防清理保护
+Да|Yes|Ja|是
+Нет|No|Nein|否
+Точки восстановления|Restore points|Wiederherstellungspunkte|还原点
+Автоматические копии хранятся на устройстве (последние 7). Перед удалением, импортом и восстановлением копия создаётся сама.|Automatic copies are kept on this device (last 7). One is also created before deleting, importing or restoring.|Automatische Kopien liegen auf dem Gerät (letzte 7). Vor Löschen, Import und Wiederherstellung wird automatisch eine erstellt.|自动备份保存在本设备上（最近 7 份）。删除、导入和还原前也会自动创建一份。
++ Создать точку сейчас|+ Create a point now|+ Jetzt Punkt erstellen|+ 立即创建还原点
+Восстановить|Restore|Wiederherstellen|还原
+Пока нет точек восстановления.|No restore points yet.|Noch keine Wiederherstellungspunkte.|暂无还原点。
+Автоматически|Automatic|Automatisch|自动
+Вручную|Manual|Manuell|手动
+Перед очисткой|Before clearing|Vor dem Löschen|清空前
+Перед импортом|Before import|Vor dem Import|导入前
+Перед восстановлением|Before restore|Vor der Wiederherstellung|还原前
+Восстановлено|Restored|Wiederhergestellt|已还原
+Точка создана|Restore point created|Punkt erstellt|已创建还原点
+Зашифрованная копия|Encrypted backup|Verschlüsselte Sicherung|加密备份
+Введите пароль от копии|Enter the backup password|Passwort der Sicherung eingeben|输入备份密码
+Пароль|Password|Passwort|密码
+Повторите пароль|Repeat password|Passwort wiederholen|重复密码
+Файл шифруется паролем (AES-256). Без пароля восстановить его невозможно: сохраните пароль надёжно.|The file is encrypted with your password (AES-256). It cannot be recovered without it, so keep the password safe.|Die Datei wird mit deinem Passwort verschlüsselt (AES-256). Ohne Passwort ist keine Wiederherstellung möglich, bewahre es sicher auf.|文件将用您的密码加密（AES-256）。没有密码将无法恢复，请妥善保管。
+Пароль короче 6 символов или не совпадает|Password is under 6 characters or does not match|Passwort kürzer als 6 Zeichen oder stimmt nicht überein|密码少于 6 位或两次不一致
+Неверный пароль или повреждённый файл|Wrong password or damaged file|Falsches Passwort oder beschädigte Datei|密码错误或文件已损坏
+Шифрование недоступно на этом устройстве|Encryption is not available on this device|Verschlüsselung ist auf diesem Gerät nicht verfügbar|此设备不支持加密
+Подтвердить|Confirm|Bestätigen|确认
+Ошибка записи в хранилище|Storage write error|Fehler beim Schreiben in den Speicher|存储写入错误`;
+const D=Object.create(null);T.split('\n').forEach(l=>{const r=l.split('|');D[r[0]]=r});
+const P=[[/^(\d+) предм\., всего (\d+) шт\.$/,'$1 items, $2 pcs in total','$1 Objekte, insgesamt $2 Stk.','$1 件物品，共 $2 件'],
+[/^(\d+) шт × (.+)$/,'$1 pcs × $2','$1 Stk. × $2','$1 件 × $2'],
+[/^Найдено: (\d+) на (.+)$/,'Found: $1 worth $2','Gefunden: $1, Wert $2','找到 $1 件，价值 $2'],
+[/^(\d+) шт\. на (.+)$/,'$1 pcs, $2','$1 Stk., $2','$1 件，$2'],
+[/^Гарантия истекла (.+)$/,'Warranty expired $1','Garantie abgelaufen am $1','保修已于 $1 到期'],
+[/^Гарантия: ещё (\d+) дн\.$/,'Warranty: $1 days left','Garantie: noch $1 Tage','保修：还剩 $1 天'],
+[/^Гарантия до (.+)$/,'Warranty until $1','Garantie bis $1','保修至 $1'],
+[/^Предмет (\d+) из (\d+)$/,'Item $1 of $2','Objekt $1 von $2','第 $1 / $2 件'],
+[/^(\d+) дн\.$/,'$1 d','$1 T.','$1 天'],
+[/^(\d+) мес\.$/,'$1 mo','$1 Mon.','$1 个月'],
+[/^([\d,]+) г\.$/,'$1 yr','$1 J.','$1 年'],
+[/^Импортировано: (\d+)$/,'Imported: $1','Importiert: $1','已导入：$1'],
+[/^Последняя проверка: не найдено (\d+)$/,'Last check: $1 missing','Letzte Prüfung: $1 fehlen','上次盘点：缺失 $1 件'],
+[/^(\d+) предм\.$/,'$1 items','$1 Objekte','$1 件'],
+[/^Одолжено: (.+)$/,'Lent to $1','Verliehen an $1','借给 $1']];
+const LI={en:1,de:2,zh:3},CY=/[А-Яа-яЁё]/,AT=['placeholder','aria-label','title'];
+function t1(c){const i=LI[LANG];if(D[c])return D[c][i];for(const p of P)if(p[0].test(c))return c.replace(p[0],p[i]);return null}
+function tr(s){if(LANG==='ru'||!CY.test(s))return s;const m=s.match(/^(\s*)([\s\S]*?)(\s*)$/);let r=t1(m[2]);
+ if(r==null){const k=m[2].match(/^([^А-Яа-яЁё]+)([А-Яа-яЁё][\s\S]*)$/);if(k){const q=t1(k[2]);if(q!=null)r=k[1]+q}}
+ return r==null?s:m[1]+r+m[3]}
+function ap(n){const cur=n.nodeValue,o=CY.test(cur)?cur:n._o;if(o===undefined)return;n._o=o;const nv=LANG==='ru'?o:tr(o);if(nv!==cur)n.nodeValue=nv}
+function at(e){AT.forEach(a=>{const cur=e.getAttribute(a);if(cur==null)return;e._oa=e._oa||{};const o=CY.test(cur)?cur:e._oa[a];if(o===undefined)return;e._oa[a]=o;const nv=LANG==='ru'?o:tr(o);if(nv!==cur)e.setAttribute(a,nv)})}
+function walk(n){if(n.nodeType===3)ap(n);else if(n.nodeType===1&&!/^(SCRIPT|STYLE|TEXTAREA)$/.test(n.tagName)){at(n);n.childNodes.forEach(walk)}}
+new MutationObserver(ms=>ms.forEach(m=>{if(m.type==='childList')m.addedNodes.forEach(walk);else if(m.type==='characterData')ap(m.target);else at(m.target)})).observe(document.body,{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:AT});
+function setLang(l){LANG=l;document.querySelectorAll('[data-lang]').forEach(b=>b.classList.toggle('on',b.dataset.lang===l));if(!S.ob){S.cur=CUR[l];$('#ocs').value=S.cur}try{localStorage.setItem('inv_lang',l)}catch(e){}document.documentElement.lang=l;document.title=tr('Имущество');walk(document.body);render()}
+$('#ocs').innerHTML=['₽','$','€','¥','₸','₴','£'].map(c=>`<option>${c}</option>`).join('');$('#ocs').value=S.cur;
+document.querySelectorAll('[data-lang]').forEach(b=>b.classList.toggle('on',b.dataset.lang===LANG));
+if(S.acc)document.documentElement.style.setProperty('--ac',S.acc);
+applyTh();
+document.documentElement.lang=LANG;document.title=tr('Имущество');walk(document.body);
+render();boot();
+try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
+</script>
+</body>
+</html>
